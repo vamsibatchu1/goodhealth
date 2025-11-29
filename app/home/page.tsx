@@ -12,12 +12,19 @@ import {
   addFoodItem,
   subscribeToDailyData,
 } from "@/lib/firebase/dailyData";
+import { getTodayDateString } from "@/lib/date-utils";
 
 export default function HomePage() {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDateString();
   const [selectedDate, setSelectedDate] = useState(today);
   const [dailyData, setDailyData] = useState<DailyData>({ date: today });
   const [isLoading, setIsLoading] = useState(true);
+
+  // Reset to today's date on component mount to ensure we always start with today
+  useEffect(() => {
+    const todayDate = getTodayDateString();
+    setSelectedDate(todayDate);
+  }, []);
 
   // Subscribe to real-time updates for the selected date
   useEffect(() => {

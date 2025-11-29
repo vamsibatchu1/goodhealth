@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTodayDateString, getDateString, isToday } from "@/lib/date-utils";
 
 interface DateTimelineProps {
   selectedDate: string;
@@ -16,13 +17,14 @@ export function DateTimeline({ selectedDate, onDateSelect }: DateTimelineProps) 
 
   useEffect(() => {
     // Generate last 14 days including today
+    // Always regenerate dates on mount to ensure today is current
     const dateArray: string[] = [];
     const today = new Date();
     
     for (let i = 13; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      dateArray.push(date.toISOString().split("T")[0]);
+      dateArray.push(getDateString(date));
     }
     
     setDates(dateArray);
@@ -50,14 +52,11 @@ export function DateTimeline({ selectedDate, onDateSelect }: DateTimelineProps) 
   }, [selectedDate, dates]);
 
   const formatDateLabel = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    const today = new Date();
-    const isToday = dateStr === today.toISOString().split("T")[0];
-    
+    const date = new Date(dateStr + "T00:00:00");
     const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
     const dayNum = date.getDate();
     
-    return isToday ? `Today ${dayNum}` : `${dayName} ${dayNum}`;
+    return isToday(dateStr) ? `Today ${dayNum}` : `${dayName} ${dayNum}`;
   };
 
   return (
@@ -68,7 +67,7 @@ export function DateTimeline({ selectedDate, onDateSelect }: DateTimelineProps) 
       >
         {dates.map((date) => {
           const isSelected = date === selectedDate;
-          const isToday = date === new Date().toISOString().split("T")[0];
+          const isTodayDate = isToday(date);
           
           return (
             <Button
@@ -85,7 +84,7 @@ export function DateTimeline({ selectedDate, onDateSelect }: DateTimelineProps) 
               size="sm"
               className={cn(
                 "flex-shrink-0 rounded-full px-4 py-2",
-                isToday && !isSelected && "border-primary/50 bg-primary/5"
+                isTodayDate && !isSelected && "border-primary/50 bg-primary/5"
               )}
             >
               {formatDateLabel(date)}
