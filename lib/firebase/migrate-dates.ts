@@ -60,6 +60,7 @@ export async function migrateDailyDataDates(): Promise<void> {
       const toDocRef = doc(db, `${DAILY_DATA_COLLECTION}/${targetDate}`);
       
       // Prepare corrected data with updated date fields
+      // Only include fields that have actual values (not undefined)
       const correctedData: any = {
         date: targetDate,
       };
@@ -88,33 +89,54 @@ export async function migrateDailyDataDates(): Promise<void> {
       // Check if target document already exists
       const targetDoc = documents.find((d) => d.id === targetDate);
       
+      // Prepare clean data object (only include defined fields)
+      const cleanData: any = { date: targetDate };
+      
       if (targetDoc && targetDoc.data) {
         // Merge with existing data - prefer the data we're moving (it's more recent)
         const existingData = targetDoc.data;
         
-        correctedData.weight = correctedData.weight || existingData.weight;
-        correctedData.burned = correctedData.burned || existingData.burned;
+        // Only include weight if it exists
+        if (correctedData.weight) {
+          cleanData.weight = correctedData.weight;
+        } else if (existingData.weight) {
+          cleanData.weight = existingData.weight;
+        }
+        
+        // Only include burned if it exists
+        if (correctedData.burned) {
+          cleanData.burned = correctedData.burned;
+        } else if (existingData.burned) {
+          cleanData.burned = existingData.burned;
+        }
         
         // Merge food items if both exist
         if (correctedData.food?.items && existingData.food?.items) {
-          correctedData.food = {
+          cleanData.food = {
             date: targetDate,
             items: [
               ...(existingData.food.items || []),
               ...(correctedData.food.items || []),
             ],
           };
-        } else {
-          correctedData.food = correctedData.food || existingData.food;
+        } else if (correctedData.food) {
+          cleanData.food = correctedData.food;
+        } else if (existingData.food) {
+          cleanData.food = existingData.food;
         }
         
         console.log(`🔄 Merging ${currentDate} → ${targetDate} (target exists)`);
       } else {
+        // No existing target document - just use the corrected data
+        if (correctedData.weight) cleanData.weight = correctedData.weight;
+        if (correctedData.burned) cleanData.burned = correctedData.burned;
+        if (correctedData.food) cleanData.food = correctedData.food;
+        
         console.log(`📦 Moving ${currentDate} → ${targetDate}`);
       }
       
       // Save to target document
-      await setDoc(toDocRef, correctedData);
+      await setDoc(toDocRef, cleanData);
       
       // Delete source document (we've moved all data)
       if (currentDate !== targetDate) {
