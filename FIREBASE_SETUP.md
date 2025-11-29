@@ -97,24 +97,3 @@ For now, we'll use a single user ID (you can add authentication later).
 
 
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBo3NGuYyYQYi1oEAu0ALnJfQ4V0cn6qHM",
-  authDomain: "goodhealth-bffd9.firebaseapp.com",
-  projectId: "goodhealth-bffd9",
-  storageBucket: "goodhealth-bffd9.firebasestorage.app",
-  messagingSenderId: "414951699606",
-  appId: "1:414951699606:web:92f606a84aee520fe97eb7",
-  measurementId: "G-QFEVLKSCHH"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
