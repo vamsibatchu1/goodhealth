@@ -11,6 +11,19 @@ const USER_ID = "default-user";
 const DAILY_DATA_COLLECTION = `users/${USER_ID}/dailyData`;
 
 /**
+ * Remove undefined values from an object (Firebase doesn't allow undefined)
+ */
+function removeUndefined(obj: any): any {
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+}
+
+/**
  * Migrate all daily data documents to correct dates
  * If date N has data that should be in date N-1, move it backward
  * This fixes the issue where data was saved one day ahead
@@ -60,30 +73,28 @@ export async function migrateDailyDataDates(): Promise<void> {
       const toDocRef = doc(db, `${DAILY_DATA_COLLECTION}/${targetDate}`);
       
       // Prepare corrected data with updated date fields
-      // Only include fields that have actual values (not undefined)
-      const correctedData: any = {
-        date: targetDate,
-      };
+      // Only include fields that have actual values (not undefined or null)
+      const correctedData: any = {};
       
-      if (docInfo.data.weight) {
-        correctedData.weight = {
+      if (docInfo.data.weight && docInfo.data.weight.weight !== undefined) {
+        correctedData.weight = removeUndefined({
           ...docInfo.data.weight,
           date: targetDate,
-        };
+        });
       }
       
-      if (docInfo.data.burned) {
-        correctedData.burned = {
+      if (docInfo.data.burned && docInfo.data.burned.burned !== undefined) {
+        correctedData.burned = removeUndefined({
           ...docInfo.data.burned,
           date: targetDate,
-        };
+        });
       }
       
-      if (docInfo.data.food) {
-        correctedData.food = {
+      if (docInfo.data.food && docInfo.data.food.items) {
+        correctedData.food = removeUndefined({
           ...docInfo.data.food,
           date: targetDate,
-        };
+        });
       }
       
       // Check if target document already exists
@@ -96,33 +107,33 @@ export async function migrateDailyDataDates(): Promise<void> {
         // Merge with existing data - prefer the data we're moving (it's more recent)
         const existingData = targetDoc.data;
         
-        // Only include weight if it exists
+        // Only include weight if it exists and has valid data
         if (correctedData.weight) {
           cleanData.weight = correctedData.weight;
-        } else if (existingData.weight) {
-          cleanData.weight = existingData.weight;
+        } else if (existingData.weight && existingData.weight.weight !== undefined) {
+          cleanData.weight = removeUndefined(existingData.weight);
         }
         
-        // Only include burned if it exists
+        // Only include burned if it exists and has valid data
         if (correctedData.burned) {
           cleanData.burned = correctedData.burned;
-        } else if (existingData.burned) {
-          cleanData.burned = existingData.burned;
+        } else if (existingData.burned && existingData.burned.burned !== undefined) {
+          cleanData.burned = removeUndefined(existingData.burned);
         }
         
         // Merge food items if both exist
         if (correctedData.food?.items && existingData.food?.items) {
-          cleanData.food = {
+          cleanData.food = removeUndefined({
             date: targetDate,
             items: [
               ...(existingData.food.items || []),
               ...(correctedData.food.items || []),
             ],
-          };
+          });
         } else if (correctedData.food) {
           cleanData.food = correctedData.food;
-        } else if (existingData.food) {
-          cleanData.food = existingData.food;
+        } else if (existingData.food && existingData.food.items) {
+          cleanData.food = removeUndefined(existingData.food);
         }
         
         console.log(`🔄 Merging ${currentDate} → ${targetDate} (target exists)`);
@@ -135,8 +146,11 @@ export async function migrateDailyDataDates(): Promise<void> {
         console.log(`📦 Moving ${currentDate} → ${targetDate}`);
       }
       
+      // Final cleanup - remove any undefined values from nested objects
+      const finalData = removeUndefined(cleanData);
+      
       // Save to target document
-      await setDoc(toDocRef, cleanData);
+      await setDoc(toDocRef, finalData);
       
       // Delete source document (we've moved all data)
       if (currentDate !== targetDate) {
