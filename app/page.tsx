@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { BottomNavigation } from "@/components/BottomNavigation";
-import { HomePage } from "./home/page";
-import { TrendsPage } from "./trends/page";
-import { ProfilePage } from "./profile/page";
+import HomePage from "./home/page";
+import TrendsPage from "./trends/page";
+import ProfilePage from "./profile/page";
 
 type TabType = "home" | "trends" | "profile";
 

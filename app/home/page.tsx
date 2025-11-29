@@ -13,7 +13,7 @@ import {
   subscribeToDailyData,
 } from "@/lib/firebase/dailyData";
 
-export function HomePage() {
+export default function HomePage() {
   const today = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState(today);
   const [dailyData, setDailyData] = useState<DailyData>({ date: today });

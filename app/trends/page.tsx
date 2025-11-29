@@ -10,7 +10,7 @@ import { getDailyDataRange } from "@/lib/firebase/dailyData";
 
 type TimePeriod = "7days" | "month" | "3months";
 
-export function TrendsPage() {
+export default function TrendsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("7days");
   const [trendData, setTrendData] = useState<DailyData[]>([]);
   const [isLoading, setIsLoading] = useState(true);

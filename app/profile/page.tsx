@@ -21,7 +21,7 @@ interface ProfileData {
   targetWeight: number;
 }
 
-export function ProfilePage() {
+export default function ProfilePage() {
   const [profile, setProfile] = useState<ProfileData>({
     age: 0,
     weight: 0,
