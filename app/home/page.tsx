@@ -28,17 +28,28 @@ export default function HomePage() {
 
   // Subscribe to real-time updates for the selected date
   useEffect(() => {
+    // Immediately clear old data when date changes to prevent showing stale data
+    setDailyData({ date: selectedDate });
     setIsLoading(true);
+    
+    let isSubscribed = true;
     const unsubscribe = subscribeToDailyData(selectedDate, (data) => {
-      if (data) {
+      // Only update if this callback is still relevant (date hasn't changed)
+      if (!isSubscribed) return;
+      
+      if (data && data.date === selectedDate) {
         setDailyData(data);
       } else {
+        // No data exists for this date - show empty state
         setDailyData({ date: selectedDate });
       }
       setIsLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      isSubscribed = false;
+      unsubscribe();
+    };
   }, [selectedDate]);
 
   const handleWeightUpdate = async (weight: number) => {

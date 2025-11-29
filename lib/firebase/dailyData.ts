@@ -125,20 +125,35 @@ export function subscribeToDailyData(
 ): Unsubscribe {
   const docRef = doc(db, getDailyDataPath(date));
   
-  return onSnapshot(docRef, (docSnap) => {
-    if (!docSnap.exists()) {
+  return onSnapshot(
+    docRef,
+    (docSnap) => {
+      if (!docSnap.exists()) {
+        callback(null);
+        return;
+      }
+      
+      const data = docSnap.data();
+      const docDate = data.date as string | undefined;
+      
+      // Validate that the document is for the requested date
+      if (docDate && docDate !== date) {
+        callback(null);
+        return;
+      }
+      
+      callback({
+        date,
+        weight: data.weight as WeightEntry | undefined,
+        burned: data.burned as CalorieBurnEntry | undefined,
+        food: data.food as FoodEntry | undefined,
+      });
+    },
+    (error) => {
+      console.error("Error in daily data subscription:", error);
       callback(null);
-      return;
     }
-    
-    const data = docSnap.data();
-    callback({
-      date,
-      weight: data.weight as WeightEntry | undefined,
-      burned: data.burned as CalorieBurnEntry | undefined,
-      food: data.food as FoodEntry | undefined,
-    });
-  });
+  );
 }
 
 /**
