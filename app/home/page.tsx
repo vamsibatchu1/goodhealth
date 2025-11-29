@@ -14,10 +14,18 @@ import {
 } from "@/lib/firebase/dailyData";
 import { getTodayDateString } from "@/lib/date-utils";
 
+// Helper to create empty daily data for a date
+const createEmptyDailyData = (date: string): DailyData => ({
+  date,
+  weight: undefined,
+  burned: undefined,
+  food: undefined,
+});
+
 export default function HomePage() {
   const today = getTodayDateString();
   const [selectedDate, setSelectedDate] = useState(today);
-  const [dailyData, setDailyData] = useState<DailyData>({ date: today });
+  const [dailyData, setDailyData] = useState<DailyData>(createEmptyDailyData(today));
   const [isLoading, setIsLoading] = useState(true);
 
   // Reset to today's date on component mount to ensure we always start with today
@@ -28,14 +36,8 @@ export default function HomePage() {
 
   // Subscribe to real-time updates for the selected date
   useEffect(() => {
-    // Immediately clear ALL old data when date changes
-    const emptyData: DailyData = { 
-      date: selectedDate,
-      weight: undefined,
-      burned: undefined,
-      food: undefined
-    };
-    setDailyData(emptyData);
+    // Immediately clear ALL old data when date changes - use function form to ensure clean state
+    setDailyData(() => createEmptyDailyData(selectedDate));
     setIsLoading(true);
     
     let isSubscribed = true;
@@ -47,9 +49,9 @@ export default function HomePage() {
         return;
       }
       
-      // Double-check we're still on the same date
+      // Use functional update to ensure we're working with latest state
       setDailyData((prevData) => {
-        // If the date has changed since we started this subscription, ignore
+        // If the date has changed since we started this subscription, ignore this callback
         if (prevData.date !== currentDate) {
           return prevData;
         }
@@ -58,7 +60,7 @@ export default function HomePage() {
           return data;
         } else {
           // No data exists for this date - show empty state
-          return emptyData;
+          return createEmptyDailyData(currentDate);
         }
       });
       
