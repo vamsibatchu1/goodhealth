@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./config";
 import { DailyData, WeightEntry, CalorieBurnEntry, FoodEntry, FoodItem } from "@/types";
+import { getDateString } from "@/lib/date-utils";
 
 // For now, using a single user ID. Later you can add authentication
 const USER_ID = "default-user";
@@ -168,11 +169,11 @@ export async function getDailyDataRange(
 ): Promise<DailyData[]> {
   // This is a simplified version. For production, use query with where clauses
   const dates: string[] = [];
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = new Date(startDate + "T00:00:00"); // Ensure local timezone parsing
+  const end = new Date(endDate + "T00:00:00"); // Ensure local timezone parsing
   
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    dates.push(d.toISOString().split("T")[0]);
+    dates.push(getDateString(d));
   }
   
   const promises = dates.map((date) => getDailyData(date));

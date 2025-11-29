@@ -13,6 +13,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ProfileData {
   age: number;
@@ -31,8 +41,9 @@ export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState<ProfileData>(profile);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [migrationMessage, setMigrationMessage] = useState<string>("");
+  const [isClearing, setIsClearing] = useState(false);
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
+  const [clearMessage, setClearMessage] = useState<string>("");
 
   useEffect(() => {
     // Load profile from localStorage or Firebase in the future
@@ -64,30 +75,31 @@ export default function ProfilePage() {
     setIsEditModalOpen(false);
   };
 
-  const handleMigrateDates = async () => {
-    if (!confirm("This will move all data backward by one day (e.g., Nov 29 data → Nov 28). This cannot be undone. Continue?")) {
-      return;
-    }
-
-    setIsMigrating(true);
-    setMigrationMessage("");
+  const handleClearAllData = async () => {
+    setIsClearing(true);
+    setClearMessage("");
     
     try {
-      const response = await fetch("/api/migrate", {
+      const response = await fetch("/api/clear-data", {
         method: "POST",
       });
 
       const result = await response.json();
 
       if (result.success) {
-        setMigrationMessage("✅ Migration completed! Please refresh the page.");
+        setClearMessage("✅ All data cleared successfully! You can now start fresh.");
+        setIsClearDialogOpen(false);
+        // Refresh the page after 2 seconds to ensure UI is updated
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
-        setMigrationMessage(`❌ Error: ${result.error || "Migration failed"}`);
+        setClearMessage(`❌ Error: ${result.error || "Failed to clear data"}`);
       }
     } catch (err) {
-      setMigrationMessage(`❌ Error: ${err instanceof Error ? err.message : "Migration failed"}`);
+      setClearMessage(`❌ Error: ${err instanceof Error ? err.message : "Failed to clear data"}`);
     } finally {
-      setIsMigrating(false);
+      setIsClearing(false);
     }
   };
 
@@ -167,32 +179,32 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Date Migration Card */}
-        <Card className="border-yellow-200 bg-yellow-50/50">
+        {/* Clear All Data Card */}
+        <Card className="border-red-200 bg-red-50/50">
           <CardHeader>
-            <CardTitle className="text-lg">Fix Date Alignment</CardTitle>
+            <CardTitle className="text-lg">Clear All Data</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              If your data is showing on the wrong dates (e.g., Nov 29 showing Nov 28&apos;s data), 
-              click the button below to fix it. This will move all data backward by one day.
+              This will permanently delete all your daily health data (weight, calories burned, and food entries).
+              Your profile information will be kept. This action cannot be undone.
             </p>
-            {migrationMessage && (
+            {clearMessage && (
               <div className={`rounded-md p-3 text-sm ${
-                migrationMessage.startsWith("✅")
+                clearMessage.startsWith("✅")
                   ? "bg-green-50 text-green-800"
                   : "bg-red-50 text-red-800"
               }`}>
-                {migrationMessage}
+                {clearMessage}
               </div>
             )}
             <Button
-              onClick={handleMigrateDates}
-              disabled={isMigrating}
-              variant="outline"
+              onClick={() => setIsClearDialogOpen(true)}
+              disabled={isClearing}
+              variant="destructive"
               className="w-full"
             >
-              {isMigrating ? "Fixing dates..." : "Fix Date Alignment"}
+              {isClearing ? "Clearing data..." : "Clear All Data"}
             </Button>
           </CardContent>
         </Card>
@@ -271,6 +283,32 @@ export default function ProfilePage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={isClearDialogOpen} onOpenChange={setIsClearDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete all your daily health data including:
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>All weight entries</li>
+                <li>All calories burned entries</li>
+                <li>All food and nutrition entries</li>
+              </ul>
+              <p className="mt-2 font-semibold">This action cannot be undone.</p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleClearAllData}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes, Clear All Data
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
