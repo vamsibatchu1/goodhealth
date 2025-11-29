@@ -31,6 +31,8 @@ export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState<ProfileData>(profile);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrationMessage, setMigrationMessage] = useState<string>("");
 
   useEffect(() => {
     // Load profile from localStorage or Firebase in the future
@@ -60,6 +62,33 @@ export default function ProfilePage() {
     setProfile(editForm);
     localStorage.setItem("userProfile", JSON.stringify(editForm));
     setIsEditModalOpen(false);
+  };
+
+  const handleMigrateDates = async () => {
+    if (!confirm("This will move all data backward by one day (e.g., Nov 29 data → Nov 28). This cannot be undone. Continue?")) {
+      return;
+    }
+
+    setIsMigrating(true);
+    setMigrationMessage("");
+    
+    try {
+      const response = await fetch("/api/migrate", {
+        method: "POST",
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMigrationMessage("✅ Migration completed! Please refresh the page.");
+      } else {
+        setMigrationMessage(`❌ Error: ${result.error || "Migration failed"}`);
+      }
+    } catch (err) {
+      setMigrationMessage(`❌ Error: ${err instanceof Error ? err.message : "Migration failed"}`);
+    } finally {
+      setIsMigrating(false);
+    }
   };
 
   const bmi = calculateBMI(profile.weight, profile.height);
@@ -135,6 +164,36 @@ export default function ProfilePage() {
                 )}
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Date Migration Card */}
+        <Card className="border-yellow-200 bg-yellow-50/50">
+          <CardHeader>
+            <CardTitle className="text-lg">Fix Date Alignment</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              If your data is showing on the wrong dates (e.g., Nov 29 showing Nov 28&apos;s data), 
+              click the button below to fix it. This will move all data backward by one day.
+            </p>
+            {migrationMessage && (
+              <div className={`rounded-md p-3 text-sm ${
+                migrationMessage.startsWith("✅")
+                  ? "bg-green-50 text-green-800"
+                  : "bg-red-50 text-red-800"
+              }`}>
+                {migrationMessage}
+              </div>
+            )}
+            <Button
+              onClick={handleMigrateDates}
+              disabled={isMigrating}
+              variant="outline"
+              className="w-full"
+            >
+              {isMigrating ? "Fixing dates..." : "Fix Date Alignment"}
+            </Button>
           </CardContent>
         </Card>
       </div>
