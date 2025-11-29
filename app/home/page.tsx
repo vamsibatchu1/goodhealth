@@ -121,16 +121,19 @@ export default function HomePage() {
       <DateTimeline selectedDate={selectedDate} onDateSelect={setSelectedDate} />
       <div className="container mx-auto px-4 py-6 space-y-6 max-w-2xl">
         <WeightCard
+          key={`weight-${selectedDate}`}
           weight={dailyData.weight}
           date={selectedDate}
           onWeightUpdate={handleWeightUpdate}
         />
         <CaloriesBurnedCard
+          key={`burned-${selectedDate}`}
           burned={dailyData.burned}
           date={selectedDate}
           onBurnedUpdate={handleBurnedUpdate}
         />
         <NutritionCard
+          key={`nutrition-${selectedDate}`}
           food={dailyData.food}
           date={selectedDate}
           weight={dailyData.weight?.weight}
