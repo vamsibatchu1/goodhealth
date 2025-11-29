@@ -49,7 +49,7 @@ export function CaloriesBurnedCard({
                   Every step counts! 🏃‍♀️
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Track your workouts and daily activities to see how active you've been.
+                  Track your workouts and daily activities to see how active you&apos;ve been.
                 </p>
               </div>
               <Button

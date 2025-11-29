@@ -182,8 +182,8 @@ export function AddFoodModal({
                   disabled={isLoading}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Example: "McDonald's McChicken + small fries" or "100g rajma
-                  with 120g cooked rice"
+                  Example: &quot;McDonald&apos;s McChicken + small fries&quot; or &quot;100g rajma
+                  with 120g cooked rice&quot;
                 </p>
               </div>
 

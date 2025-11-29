@@ -172,7 +172,7 @@ export function NutritionCard({
                   Start tracking your nutrition! 🥗
                 </p>
                 <p className="text-sm text-muted-foreground px-4">
-                  Log your meals to see how you're doing with your daily goals.
+                  Log your meals to see how you&apos;re doing with your daily goals.
                 </p>
               </div>
             )}
