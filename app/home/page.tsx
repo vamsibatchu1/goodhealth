@@ -28,21 +28,40 @@ export default function HomePage() {
 
   // Subscribe to real-time updates for the selected date
   useEffect(() => {
-    // Immediately clear old data when date changes to prevent showing stale data
-    setDailyData({ date: selectedDate });
+    // Immediately clear ALL old data when date changes
+    const emptyData: DailyData = { 
+      date: selectedDate,
+      weight: undefined,
+      burned: undefined,
+      food: undefined
+    };
+    setDailyData(emptyData);
     setIsLoading(true);
     
     let isSubscribed = true;
+    const currentDate = selectedDate; // Capture the date for this subscription
+    
     const unsubscribe = subscribeToDailyData(selectedDate, (data) => {
       // Only update if this callback is still relevant (date hasn't changed)
-      if (!isSubscribed) return;
-      
-      if (data && data.date === selectedDate) {
-        setDailyData(data);
-      } else {
-        // No data exists for this date - show empty state
-        setDailyData({ date: selectedDate });
+      if (!isSubscribed) {
+        return;
       }
+      
+      // Double-check we're still on the same date
+      setDailyData((prevData) => {
+        // If the date has changed since we started this subscription, ignore
+        if (prevData.date !== currentDate) {
+          return prevData;
+        }
+        
+        if (data && data.date === currentDate) {
+          return data;
+        } else {
+          // No data exists for this date - show empty state
+          return emptyData;
+        }
+      });
+      
       setIsLoading(false);
     });
 

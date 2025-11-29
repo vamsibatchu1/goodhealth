@@ -123,7 +123,8 @@ export function subscribeToDailyData(
   date: string,
   callback: (data: DailyData | null) => void
 ): Unsubscribe {
-  const docRef = doc(db, getDailyDataPath(date));
+  const path = getDailyDataPath(date);
+  const docRef = doc(db, path);
   
   return onSnapshot(
     docRef,
@@ -134,10 +135,12 @@ export function subscribeToDailyData(
       }
       
       const data = docSnap.data();
-      const docDate = data.date as string | undefined;
+      const docId = docSnap.id;
       
-      // Validate that the document is for the requested date
-      if (docDate && docDate !== date) {
+      // Validate that the document ID matches the requested date
+      // The document ID in Firebase should be the date string (e.g., "2024-11-29")
+      if (docId !== date) {
+        // This shouldn't happen, but if it does, return null to prevent showing wrong data
         callback(null);
         return;
       }
