@@ -12,15 +12,28 @@ const DAILY_DATA_COLLECTION = `users/${USER_ID}/dailyData`;
 
 /**
  * Remove undefined values from an object (Firebase doesn't allow undefined)
+ * Recursively cleans nested objects
  */
 function removeUndefined(obj: any): any {
-  const cleaned: any = {};
-  for (const [key, value] of Object.entries(obj)) {
-    if (value !== undefined) {
-      cleaned[key] = value;
-    }
+  if (obj === null || obj === undefined) {
+    return obj;
   }
-  return cleaned;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeUndefined(item));
+  }
+  
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        cleaned[key] = removeUndefined(value);
+      }
+    }
+    return cleaned;
+  }
+  
+  return obj;
 }
 
 /**
