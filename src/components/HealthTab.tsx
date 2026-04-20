@@ -65,7 +65,7 @@ export default function HealthTab() {
                 <div className="card-icon blue">
                   <UserCircle size={16} />
                 </div>
-                <span className="card-title">Weight</span>
+                <span className="card-title has-tooltip" data-tooltip="Your most recent body weight measurement.">Weight</span>
               </div>
               <div className="card-header-right">
                 <span>10:18 AM</span>
@@ -96,7 +96,7 @@ export default function HealthTab() {
                 <div className="card-icon blue">
                   <UserCircle size={16} />
                 </div>
-                <span className="card-title">Height</span>
+                <span className="card-title has-tooltip" data-tooltip="Your current standing height.">Height</span>
               </div>
               <div className="card-header-right">
                 <span>10:18 AM</span>
@@ -115,7 +115,7 @@ export default function HealthTab() {
                 <div className="card-icon red">
                   <HeartPulse size={16} fill="currentColor" />
                 </div>
-                <span className="card-title">Heart Rate</span>
+                <span className="card-title has-tooltip" data-tooltip="Average heart beats per minute over the last 24 hours.">Heart Rate</span>
               </div>
               <div className="card-header-right">
                 <span>9:49 AM</span>
