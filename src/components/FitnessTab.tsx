@@ -26,7 +26,7 @@ export default function FitnessTab() {
                 <div className="card-icon yellow">
                   <Activity size={16} />
                 </div>
-                <span className="card-title">Workouts</span>
+                <span className="card-title has-tooltip" data-tooltip="Total number of physical activities logged.">Workouts</span>
               </div>
               <div className="card-header-right">
                 <span>Last week</span>
@@ -59,7 +59,7 @@ export default function FitnessTab() {
                 <div className="card-icon yellow">
                   <Footprints size={16} />
                 </div>
-                <span className="card-title">Daily Steps (Avg.)</span>
+                <span className="card-title has-tooltip" data-tooltip="Average number of steps taken per day.">Daily Steps (Avg.)</span>
               </div>
               <div className="card-header-right">
                 <span>Last week</span>
@@ -99,7 +99,7 @@ export default function FitnessTab() {
                 <div className="card-icon red">
                   <Activity size={16} />
                 </div>
-                <span className="card-title">VO2 Max Trend</span>
+                <span className="card-title has-tooltip" data-tooltip="Maximum rate of oxygen consumption during exercise.">VO2 Max Trend</span>
               </div>
               <div className="card-header-right">
                 <span>This month</span>
@@ -130,7 +130,7 @@ export default function FitnessTab() {
                 <div className="card-icon red">
                   <Activity size={16} />
                 </div>
-                <span className="card-title">Resting Heart Rate</span>
+                <span className="card-title has-tooltip" data-tooltip="Your heart beats per minute while completely at rest.">Resting Heart Rate</span>
               </div>
               <div className="card-header-right">
                 <span>Today</span>
@@ -150,7 +150,7 @@ export default function FitnessTab() {
                 <div className="card-icon blue">
                   <Activity size={16} />
                 </div>
-                <span className="card-title">Sleep Stages</span>
+                <span className="card-title has-tooltip" data-tooltip="Breakdown of time spent in REM, Deep, and Light sleep.">Sleep Stages</span>
               </div>
               <div className="card-header-right">
                 <span>Last night</span>
@@ -171,6 +171,92 @@ export default function FitnessTab() {
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: '#2d5bf6' }} />Deep</span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: '#5856d6' }} />REM</span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: '#aabdfb' }} />Light</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Row 3: Additional Vitals (3 Cards Equal Width) */}
+        <div className="grid-row-3" style={{ marginTop: '0.5rem' }}>
+          
+          {/* HRV Card */}
+          <div className="metric-card">
+            <div className="card-header">
+              <div className="card-header-left">
+                <div className="card-icon blue">
+                  <Activity size={16} />
+                </div>
+                <span className="card-title has-tooltip" data-tooltip="Variation in time between consecutive heartbeats.">Heart Rate Variability</span>
+              </div>
+              <div className="card-header-right">
+                <span>Today</span>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="card-value-group">
+                <div className="card-value">64 <span className="card-unit">ms</span></div>
+                <div className="card-trend" style={{marginTop: '0.25rem'}}>
+                  <div className="trend-icon positive" style={{width: 14, height: 14}} />
+                  <span>Optimal Recovery</span>
+                </div>
+              </div>
+              <div className="card-visual">
+                <svg width="60" height="30" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 15 Q 10 5, 20 15 T 40 15 T 60 15" stroke="var(--text-muted)" strokeWidth="2" fill="none" opacity="0.3" />
+                  <path d="M0 15 Q 10 25, 20 15 T 40 15 T 60 15" stroke="var(--accent-primary)" strokeWidth="2" fill="none" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Blood Oxygen (SpO2) Card */}
+          <div className="metric-card">
+            <div className="card-header">
+              <div className="card-header-left">
+                <div className="card-icon green">
+                  <Activity size={16} />
+                </div>
+                <span className="card-title has-tooltip" data-tooltip="Percentage of oxygen circulating in your blood.">Blood Oxygen</span>
+              </div>
+              <div className="card-header-right">
+                <span>Latest</span>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="card-value-group">
+                <div className="card-value">98 <span className="card-unit">%</span></div>
+              </div>
+              <div className="card-visual">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="20" cy="20" r="16" stroke="var(--border-color)" strokeWidth="4" />
+                  <circle cx="20" cy="20" r="16" stroke="var(--accent-tertiary)" strokeWidth="4" strokeDasharray="100" strokeDashoffset="5" strokeLinecap="round" transform="rotate(-90 20 20)" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Respiratory Rate Card */}
+          <div className="metric-card">
+            <div className="card-header">
+              <div className="card-header-left">
+                <div className="card-icon yellow">
+                  <Activity size={16} />
+                </div>
+                <span className="card-title has-tooltip" data-tooltip="Average number of breaths taken per minute.">Respiratory Rate</span>
+              </div>
+              <div className="card-header-right">
+                <span>Avg. Sleeping</span>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="card-value-group">
+                <div className="card-value">14.2 <span className="card-unit">br/min</span></div>
+              </div>
+              <div className="card-visual">
+                <svg width="60" height="30" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 15 C 10 0, 20 30, 30 15 C 40 0, 50 30, 60 15" stroke="#ff9500" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             </div>
           </div>

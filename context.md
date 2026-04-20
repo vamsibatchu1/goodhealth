@@ -36,8 +36,8 @@ This file serves as a running record of all architectural decisions, design patt
   - Latest Measurements: 3-column row for Weight, Height, and Heart Rate.
 - **Medical Vault Tab (`MedicalVaultTab.tsx`)**:
   - Dedicated tab extracted from Health.
-  - Row 1: Medical Translator (AI summarization of reports) and Total Documents Stored.
-  - Row 2: List of all uploaded documents alongside a Drag & Drop trigger card.
+  - Row 1: Medical Translator (AI summarization), Documents Stored stats, and a compact "Upload Document" drag-and-drop trigger card.
+  - Row 2: Yearly Checklist (occupying 30% width) tracking preventative care (Physical, Dental, Vaccinations), alongside the Vault Contents file list (occupying 70% width).
 - **Upload Report Modal (`UploadReport.tsx`)**:
   - Right-aligned floating side-panel for uploading new documents.
   - Uses **React `createPortal`** (rendering into `document.body`) to prevent it from being clipped or trapped by the `transform` properties used in CSS fade-in animations on the main scroll container.
@@ -45,6 +45,7 @@ This file serves as a running record of all architectural decisions, design patt
 - **Fitness Tab (`FitnessTab.tsx`)**:
   - Trends: Workouts logged and Daily Steps.
   - Vitals Dashboard: VO2 Max Trend, Resting Heart Rate, and a custom CSS stacked-bar chart for Sleep Stages.
+  - Additional Vitals: Heart Rate Variability (HRV) featuring an SVG wavy line chart, Blood Oxygen (SpO2) with an SVG circular gauge, and Respiratory Rate featuring an animated-style SVG sine wave.
 - **Nutrition Tab (`NutritionTab.tsx`)**:
   - Natural language input for meal logging ("Log a meal...").
   - Today's Nutrition stats (Calories, Protein).

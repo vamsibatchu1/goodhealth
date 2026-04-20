@@ -176,6 +176,12 @@
   gap: 1.5rem;
 }
 
+.grid-row-2-unequal-reverse {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.5rem;
+}
+
 /* Withings-style Standalone Metric Cards */
 .metric-card {
   padding: 1.25rem 1.5rem;
@@ -219,6 +225,64 @@
   color: var(--text-primary);
   font-size: 0.9375rem;
   font-weight: 600;
+}
+
+/* Tooltip implementation */
+.card-title.has-tooltip {
+  text-decoration: underline dotted var(--text-muted);
+  text-underline-offset: 4px;
+  cursor: help;
+  position: relative;
+}
+
+.card-title.has-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--text-primary);
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  width: 180px;
+  white-space: normal;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-title.has-tooltip::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent var(--text-primary) transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+
+.card-title.has-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(4px);
+}
+
+.card-title.has-tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
 }
 
 .card-header-right {
@@ -292,7 +356,8 @@
 
   .grid-row-2,
   .grid-row-3,
-  .grid-row-2-unequal {
+  .grid-row-2-unequal,
+  .grid-row-2-unequal-reverse {
     grid-template-columns: 1fr;
   }
 
