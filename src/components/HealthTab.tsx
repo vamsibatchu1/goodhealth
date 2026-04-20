@@ -52,7 +52,7 @@ export default function HealthTab() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '24px' }}>
           <h3 className="section-title" style={{ margin: 0 }}>Latest Measurements</h3>
-          <span style={{ color: 'var(--accent-primary)', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <span style={{ color: 'var(--text-primary)', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             Show all <ChevronRight size={16} />
           </span>
         </div>

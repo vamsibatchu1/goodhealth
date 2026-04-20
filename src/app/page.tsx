@@ -9,6 +9,7 @@ import HealthTab from '@/components/HealthTab';
 import MedicalVaultTab from '@/components/MedicalVaultTab';
 import FitnessTab from '@/components/FitnessTab';
 import NutritionTab from '@/components/NutritionTab';
+import SettingsTab from '@/components/SettingsTab';
 import ChatOverlay from '@/components/ChatOverlay';
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
       case 'medical': return <MedicalVaultTab />;
       case 'fitness': return <FitnessTab />;
       case 'nutrition': return <NutritionTab />;
+      case 'settings': return <SettingsTab />;
       default: return <HealthTab />;
     }
   };
@@ -67,7 +69,10 @@ export default function Dashboard() {
             <Apple size={20} />
             <span>Nutrition & Diet</span>
           </button>
-          <button className="nav-item">
+          <button 
+            className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
             <Settings size={20} />
             <span>Settings</span>
           </button>
@@ -109,7 +114,7 @@ export default function Dashboard() {
           <Apple size={24} />
           <span>Nutrients</span>
         </button>
-        <button className="mobile-nav-item">
+        <button className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
           <Settings size={24} />
           <span>Settings</span>
         </button>

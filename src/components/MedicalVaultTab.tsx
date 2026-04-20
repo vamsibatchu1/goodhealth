@@ -11,7 +11,7 @@ export default function MedicalVaultTab() {
           
           {/* Card 1: Medical Translator Summary */}
           <div className="metric-card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem', color: 'var(--accent-purple)' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem', color: 'var(--text-primary)' }}>
               <Activity size={18} />
               <span style={{ fontSize: '0.875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Latest Summary</span>
             </div>
@@ -72,7 +72,7 @@ export default function MedicalVaultTab() {
              </div>
              
              {/* View All Button */}
-             <div style={{ padding: '1rem', textAlign: 'center', cursor: 'pointer', color: 'var(--accent-primary)', fontSize: '0.9375rem', fontWeight: 600 }}>
+             <div style={{ padding: '1rem', textAlign: 'center', cursor: 'pointer', color: 'var(--text-primary)', fontSize: '0.9375rem', fontWeight: 600 }}>
                View all documents
              </div>
           </div>
