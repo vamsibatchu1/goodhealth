@@ -1,65 +1,122 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState } from 'react';
+import { Activity, Heart, Apple, Settings, MessageSquare, LayoutDashboard, Plus, FileText } from 'lucide-react';
+import './dashboard.css';
+
+// Subcomponents for the tabs
+import HealthTab from '@/components/HealthTab';
+import MedicalVaultTab from '@/components/MedicalVaultTab';
+import FitnessTab from '@/components/FitnessTab';
+import NutritionTab from '@/components/NutritionTab';
+import ChatOverlay from '@/components/ChatOverlay';
+
+export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState('health');
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'health': return <HealthTab />;
+      case 'medical': return <MedicalVaultTab />;
+      case 'fitness': return <FitnessTab />;
+      case 'nutrition': return <NutritionTab />;
+      default: return <HealthTab />;
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="app-container">
+      {/* Sidebar Navigation */}
+      <nav className="sidebar">
+        <div className="brand">
+          <img src="/goodhealth.svg" alt="GoodHealth Logo" style={{ width: '24px', height: '24px' }} />
+          <h1>GoodHealth</h1>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="nav-group">
+          <p className="nav-label">OVERVIEW</p>
+          <button 
+            className={`nav-item ${activeTab === 'health' ? 'active' : ''}`}
+            onClick={() => setActiveTab('health')}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Activity size={20} />
+            <span>Health & Medical</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'medical' ? 'active' : ''}`}
+            onClick={() => setActiveTab('medical')}
           >
-            Documentation
-          </a>
+            <FileText size={20} />
+            <span>Medical Vault</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'fitness' ? 'active' : ''}`}
+            onClick={() => setActiveTab('fitness')}
+          >
+            <LayoutDashboard size={20} />
+            <span>Fitness & Sleep</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'nutrition' ? 'active' : ''}`}
+            onClick={() => setActiveTab('nutrition')}
+          >
+            <Apple size={20} />
+            <span>Nutrition & Diet</span>
+          </button>
+          <button className="nav-item">
+            <Settings size={20} />
+            <span>Settings</span>
+          </button>
+        </div>
+
+        <div className="nav-group mt-auto">
+          <button 
+            className="nav-item action-btn"
+            onClick={() => setIsChatOpen(true)}
+          >
+            <MessageSquare size={20} />
+            <span>AI Health Assistant</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="main-content">
+        <div className="content-scroll animate-fade-in" style={{ paddingTop: '2rem' }}>
+          {renderTabContent()}
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="mobile-nav">
+        <button className={`mobile-nav-item ${activeTab === 'health' ? 'active' : ''}`} onClick={() => setActiveTab('health')}>
+          <Activity size={24} />
+          <span>Health</span>
+        </button>
+        <button className={`mobile-nav-item ${activeTab === 'medical' ? 'active' : ''}`} onClick={() => setActiveTab('medical')}>
+          <FileText size={24} />
+          <span>Vault</span>
+        </button>
+        <button className={`mobile-nav-item ${activeTab === 'fitness' ? 'active' : ''}`} onClick={() => setActiveTab('fitness')}>
+          <LayoutDashboard size={24} />
+          <span>Fitness</span>
+        </button>
+        <button className={`mobile-nav-item ${activeTab === 'nutrition' ? 'active' : ''}`} onClick={() => setActiveTab('nutrition')}>
+          <Apple size={24} />
+          <span>Nutrients</span>
+        </button>
+        <button className="mobile-nav-item">
+          <Settings size={24} />
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      {/* Chat Overlay */}
+      {isChatOpen && <ChatOverlay onClose={() => setIsChatOpen(false)} />}
     </div>
   );
 }
