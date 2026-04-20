@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Activity, FileText, UploadCloud, ChevronRight } from 'lucide-react';
+import UploadReport from './UploadReport';
 
 export default function MedicalVaultTab() {
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+
   return (
     <div className="tab-content">
       <div className="dashboard-grid">
@@ -78,7 +81,7 @@ export default function MedicalVaultTab() {
           </div>
 
           {/* Card 2: Drag and Drop Upload */}
-          <div className="metric-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', border: '2px dashed var(--border-color)', background: 'transparent', boxShadow: 'none' }}>
+          <div className="metric-card" onClick={() => setIsUploadOpen(true)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', border: '2px dashed var(--border-color)', background: 'transparent', boxShadow: 'none', cursor: 'pointer' }}>
             <div style={{ color: 'var(--text-muted)', marginBottom: '1rem', background: 'var(--bg-secondary)', padding: '1rem', borderRadius: '50%', boxShadow: 'var(--shadow-sm)' }}>
               <UploadCloud size={28} />
             </div>
@@ -89,6 +92,8 @@ export default function MedicalVaultTab() {
         </div>
 
       </div>
+      
+      {isUploadOpen && <UploadReport onClose={() => setIsUploadOpen(false)} />}
     </div>
   );
 }
